@@ -8,9 +8,15 @@ namespace Zoo.Animals.AirAnimals
 {
     public class Vulture : AirAnimal
     {
+        public Vulture(string Name)
+        {
+            this.Name = Name;
+            this.Area = Area.Air;
+            this.IsBusy = false;
+        }
         public override void MakeSound()
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"{this.Name}: Valvalval!");
         }
     }
 }

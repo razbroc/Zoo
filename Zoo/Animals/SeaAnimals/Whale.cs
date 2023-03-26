@@ -8,6 +8,12 @@ namespace Zoo.Animals.SeaAnimals
 {
     public class Whale : SeaAnimal
     {
+        public Whale(string Name)
+        {
+            this.Name = Name;
+            this.Area = Area.Sea;
+            this.IsBusy = false;
+        }
         public override void MakeSound()
         {
             Console.WriteLine($"{this.Name}: WHEEE!");

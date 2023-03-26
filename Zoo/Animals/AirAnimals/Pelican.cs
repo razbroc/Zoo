@@ -8,6 +8,12 @@ namespace Zoo.Animals.AirAnimals
 {
     public class Pelican : AirAnimal
     {
+        public Pelican(string Name)
+        {
+            this.Name = Name;
+            this.Area = Area.Air;
+            this.IsBusy = false;
+        }
         public override void MakeSound()
         {
             Console.WriteLine($"{this.Name}: Pecpec!");

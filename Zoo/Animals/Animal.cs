@@ -10,6 +10,7 @@ namespace Zoo.Animals
     {
         public string Name;
         public Area Area;
+        public bool IsBusy;
         public abstract void MakeSound();
     }
 }

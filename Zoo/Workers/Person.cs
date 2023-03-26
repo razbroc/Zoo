@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Zoo.Animals;
 
 namespace Zoo.Workers
 {
-    public abstract class Worker : Person
+    public class Person
     {
-        public Area WorkArea;
-        public int WorkTime; //seconds
+        public string Name { get; set; }
     }
 }

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Zoo.Animals;
+using Zoo.Animals.AirAnimals;
 
-namespace Zoo.Workers
+namespace Zoo
 {
-    public abstract class Worker : Person
+    public class Zoo
     {
-        public Area WorkArea;
-        public int WorkTime; //seconds
+        Animal animal1 = new Eagle("moshe");
     }
 }

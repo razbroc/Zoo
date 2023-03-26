@@ -8,6 +8,12 @@ namespace Zoo.Animals.SeaAnimals
 {
     public class Pufferfish : SeaAnimal
     {
+        public Pufferfish(string Name)
+        {
+            this.Name = Name;
+            this.Area = Area.Sea;
+            this.IsBusy = false;
+        }
         public override void MakeSound()
         {
             Console.WriteLine($"{this.Name}: Puff!!");

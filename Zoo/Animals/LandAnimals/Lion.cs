@@ -8,6 +8,12 @@ namespace Zoo.Animals.LandAnimals
 {
     public class Lion : LandAnimal
     {
+        public Lion(string Name)
+        {
+            this.Name = Name;
+            this.Area = Area.Land;
+            this.IsBusy = false;
+        }
         public override void MakeSound()
         {
             Console.WriteLine($"{Name}: Raaarrrrr!");
