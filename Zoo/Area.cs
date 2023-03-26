@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Zoo
 {
-    public abstract class Animal
+    public enum Area
     {
-        public string Name;
-        public abstract void MakeSound();
+        Land,
+        Air,
+        Sea,
+        Mix
     }
 }

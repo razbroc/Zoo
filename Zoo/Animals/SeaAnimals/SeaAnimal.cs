@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Zoo
+namespace Zoo.Animals.SeaAnimals
 {
-    public abstract class MixedAnimal : Animal
+    public abstract class SeaAnimal : Animal
     {
     }
 }
