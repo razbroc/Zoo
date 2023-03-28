@@ -10,11 +10,18 @@ namespace Zoo.Workers
     public class Feeder : Worker
     {
         private Animal Animal;
-        public Feeder(Animal animal)
+        public Feeder(string name, Animal animal)
         {
+            this.Name = name;
             Animal = animal;
             this.WorkArea = Animal.Area;
             this.WorkTime = 10;
+        }
+        public override void DoWork()
+        {
+            Console.WriteLine("Feeding!");
+            Thread.Sleep(WorkTime * 1000);
+            Console.WriteLine("Done feeding.");
         }
     }
 }

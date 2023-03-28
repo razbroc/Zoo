@@ -11,11 +11,19 @@ namespace Zoo.Workers
     {
         private Animal Animal;
 
-        public Doctor(Animal animal)
+        public Doctor(string name, Animal animal)
         {
+            this.Name = name;
             Animal = animal;
             this.WorkArea = Animal.Area;
             this.WorkTime = 5;
+        }
+
+        public override void DoWork()
+        {
+            Console.WriteLine("Healing!");
+            Thread.Sleep(WorkTime * 1000);
+            Console.WriteLine("Done healing.");
         }
     }
 }

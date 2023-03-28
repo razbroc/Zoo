@@ -9,10 +9,18 @@ namespace Zoo.Workers
 {
     public class Cleaner : Worker
     {
-        public Cleaner(Area WorkArea)
+        public Cleaner(string name, Area WorkArea)
         {
+            this.Name = name;
             this.WorkArea = WorkArea;
             this.WorkTime = 2;
+        }
+
+        public override void DoWork()
+        {
+            Console.WriteLine("Cleaning!");
+            Thread.Sleep(WorkTime * 1000);
+            Console.WriteLine("Done cleaning.");
         }
     }
 }
