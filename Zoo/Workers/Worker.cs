@@ -54,5 +54,12 @@ namespace Zoo.Workers
                 WorkAreaTime.Add(timeToWork, area);
             }
         }
+
+        public bool IsWorkingAtTime(int time)
+        {
+            return this.WorkAreaTime[time] != null;
+        }
+
+
     }
 }

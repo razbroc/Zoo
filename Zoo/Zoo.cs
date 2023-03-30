@@ -22,12 +22,50 @@ namespace Zoo
         public static object AirTour;
         public static object SeaTour;
         public static object MixTour;
+
         public List<Animal> Animals;
         public List<Worker> Workers;
-        public int CurrentTime = 0; //seconds
+        public List<Person> Visitors;
+
+        //private int CurrentTime = 0; 
         public const int SECONDS_IN_DAY = 120;
+        public delegate void FieldChangedEventHandler();
+        public event FieldChangedEventHandler CurrentTimeChanged;
+
+        public int CurrentTime //seconds
+        {
+            get { return CurrentTime; }
+            set
+            {
+                if (CurrentTime != value)
+                {
+                    CurrentTime = value;
+                    OnCurrentTimeChange();
+                }
+            }
+        }
+        
+        protected virtual void OnCurrentTimeChange()
+        {
+            CurrentTimeChanged?.Invoke();
+        }
+
+        //find the worker that should work at this time and make him work
+        public void WorkWokers()
+        {
+            foreach (Worker worker in this.Workers)
+            {
+                if (worker.IsWorkingAtTime(CurrentTime)) { 
+                    //TODO: we need to add here to pause a tour in the current zone that the worker is working.
+                    //only for doctor and cleaner
+                    worker.DoWork();
+                    //resume
+                }
+            }
+        }
 
         public void ZooInit() {
+            CurrentTimeChanged += new FieldChangedEventHandler(WorkWokers);
             Animal animalAir1 = new Eagle("Moshe");
             Animal animalAir2 = new Hawk("Yoram");
             Animal animalAir3 = new Owl("Yakov");
@@ -50,18 +88,29 @@ namespace Zoo
             Worker worker2 = new Doctor("Avram", animalMix3);
             Worker worker3 = new Feeder("Shay", animalLand1);
             this.Workers = new List<Worker>{worker1, worker2, worker3 };
-        }
 
-
-        public void StartTour(string location, object objToLock, List<Person> visitors)
-        {
-            lock (objToLock)
-            {
+            Person p1= new Person("Emil");
+            Person p2= new Person("Yossi");
+            Person p3= new Person("Moshe");
+            Person p4= new Person("Kokav");
+            Person p5= new Person("Hertzi");
+            Person p6= new Person("Amnon");
+            Person p7= new Person("Yoav");
+            Person p8= new Person("Shadi");
+            Person p9= new Person("Mohammed");
+            Person p10= new Person("Yoram");
+            this.Visitors = new List<Person> {p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 };
+        }    
+       
+       public void StartTour(string location, object objToLock, List<Person> visitors)
+       {
+           lock (objToLock)
+           {
                 Console.WriteLine($"Touring in the {location}!...");
                 Thread.Sleep(10000);
                 Console.WriteLine($"{location} tour is finished...");
             }
-        }
+       }
 
         public void InitAllWorkers()
         {
@@ -71,19 +120,46 @@ namespace Zoo
             }
         }
 
+        private void TickClock()
+        {
+            this.CurrentTime++;
+        }
+
+        public object RandomTourArea()
+        {
+            Random rnd = new Random();
+            List<object> areasObjects = new List<object> { LandTour, AirTour, MixTour, SeaTour};
+            return areasObjects[rnd.Next( areasObjects.Count - 1)];
+        }
+
+        public List<Person> AssignePeopleToTour()
+        {
+            List<Person> currentTour = new List<Person> ();
+
+            for (int visitorIndex = 0; visitorIndex < 5 || Visitors.Count > 0; visitorIndex++)
+            {
+                currentTour.Add(this.Visitors[0]);
+                this.Visitors.RemoveAt(0);
+            }
+
+            return currentTour;
+        }
+
+        
         public void RunDayInZoo()
         {
             InitAllWorkers();
-        }
+            while (this.CurrentTime != SECONDS_IN_DAY)
+            {
+                TickClock();
+                Thread.Sleep(1000);
+                object tourPlace = this.RandomTourArea();
+                List<Person> currentTour = AssignePeopleToTour();
+                StartTour((string)tourPlace, tourPlace, currentTour);
+            }
 
-        public void WorkTime()
-        {
-            Random rnd = new Random();
-            int workerIndex = rnd.Next(this.Workers.Count() - 1);
-            Worker worker = this.Workers[workerIndex];
-            int maxWorkHour = SECONDS_IN_DAY - worker.WorkTime - this.CurrentTime;
-            int timeToWork = rnd.Next(this.CurrentTime, maxWorkHour);
-
+            this.CurrentTime = 0;
+            
         }
     }
 }
