@@ -106,6 +106,7 @@ namespace Zoo
        {
            lock (objToLock)
            {
+
                 Console.WriteLine($"Touring in the {location}!...");
                 Thread.Sleep(10000);
                 Console.WriteLine($"{location} tour is finished...");
@@ -155,11 +156,11 @@ namespace Zoo
                 Thread.Sleep(1000);
                 object tourPlace = this.RandomTourArea();
                 List<Person> currentTour = AssignePeopleToTour();
-                StartTour((string)tourPlace, tourPlace, currentTour);
+                Thread runningTour = new Thread(()=> StartTour((string)tourPlace, tourPlace, currentTour));\
+                runningTour.Start();
             }
 
             this.CurrentTime = 0;
-            
         }
     }
 }
