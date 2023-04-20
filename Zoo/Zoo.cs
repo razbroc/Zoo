@@ -18,32 +18,27 @@ namespace Zoo
 {
     public class Zoo
     {
-        public static object LandTour;
-        public static object AirTour;
-        public static object SeaTour;
-        public static object MixTour;
+        public static AreaType LandTour = new AreaType(Area.Land);
+        public static AreaType AirTour = new AreaType(Area.Air);
+        public static AreaType SeaTour = new AreaType(Area.Sea);
+        public static AreaType MixTour = new AreaType(Area.Mix);
 
         public List<Animal> Animals;
         public List<Worker> Workers;
         public List<Person> Visitors;
 
         public const int SECONDS_IN_DAY = 120;
+
         public delegate void FieldChangedEventHandler();
         public event FieldChangedEventHandler CurrentTimeChanged;
 
-        public int CurrentTime //seconds
+        public int CurrentTime = 0; //seconds
+
+        public Zoo()
         {
-            get { return CurrentTime; }
-            set
-            {
-                if (CurrentTime != value)
-                {
-                    CurrentTime = value;
-                    OnCurrentTimeChange();
-                }
-            }
+            this.ZooInit();
         }
-        
+
         protected virtual void OnCurrentTimeChange()
         {
             //runs the methods that need to happen as every second passes. (ex: check if worker's time to work).
@@ -55,7 +50,8 @@ namespace Zoo
         {
             foreach (Worker worker in this.Workers)
             {
-                if (worker.IsWorkingAtTime(CurrentTime)) { 
+                if (worker.IsWorkingAtTime(CurrentTime)) {
+                    ZooManagerSingleton.Instance.AddDocumantation($"{worker.Name} doing work");
                     worker.DoWork();
                 }
             }
@@ -99,14 +95,14 @@ namespace Zoo
             this.Visitors = new List<Person> {p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 };
         }    
        
-       public void StartTour(string location, object objToLock, List<Person> visitors)
+       public void StartTour(AreaType objToLock, List<Person> visitors)
        {
             //locking tour area
            lock (objToLock)
            {
-                Console.WriteLine($"Tour has started on {location}!... time: {this.CurrentTime} sec");
+                ZooManagerSingleton.Instance.AddDocumantation($"Tour has started on {objToLock.Area}!... time: {this.CurrentTime} sec");
                 Thread.Sleep(10000);
-                Console.WriteLine($"{location} tour is finished... time: {this.CurrentTime} sec");
+                ZooManagerSingleton.Instance.AddDocumantation($"{objToLock.Area} tour is finished... time: {this.CurrentTime} sec");
             }
        }
 
@@ -114,6 +110,7 @@ namespace Zoo
         {
             foreach (Worker worker in this.Workers)
             {
+                ZooManagerSingleton.Instance.AddDocumantation($"initialazing workers working times");
                 worker.InitWorkingTimes();
             }
         }
@@ -121,12 +118,13 @@ namespace Zoo
         private void TickClock()
         {
             this.CurrentTime++;
+            OnCurrentTimeChange();
         }
 
-        public object RandomTourArea()
+        public AreaType RandomTourArea()
         {
             Random rnd = new Random();
-            List<object> areasObjects = new List<object> { LandTour, AirTour, MixTour, SeaTour};
+            List<AreaType> areasObjects = new List<AreaType> { LandTour, AirTour, MixTour, SeaTour};
             return areasObjects[rnd.Next( areasObjects.Count - 1)];
         }
 
@@ -134,12 +132,11 @@ namespace Zoo
         {
             List<Person> currentTour = new List<Person> ();
 
-            for (int visitorIndex = 0; visitorIndex < 5 || Visitors.Count > 0; visitorIndex++)
+            for (int visitorIndex = 0; visitorIndex < 5 && Visitors.Count > 0; visitorIndex++)
             {
                 currentTour.Add(this.Visitors[0]);
                 this.Visitors.RemoveAt(0);
             }
-
             return currentTour;
         }
 
@@ -152,9 +149,9 @@ namespace Zoo
             {
                 TickClock();
                 Thread.Sleep(1000);
-                object tourPlace = this.RandomTourArea();
+                AreaType tourPlace = this.RandomTourArea();
                 List<Person> currentTour = AssignePeopleToTour();
-                Thread runningTour = new Thread(()=> StartTour((string)tourPlace, tourPlace, currentTour));
+                Thread runningTour = new Thread(()=> StartTour(tourPlace, currentTour));
                 runningTour.Start();
             }
 

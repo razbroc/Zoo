@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace Zoo
 {
+    public class AreaType
+    {
+        public Area Area;
+
+        public AreaType(Area area)
+        {
+            this.Area = area;
+        }
+    }
     public enum Area
     {
         Land,

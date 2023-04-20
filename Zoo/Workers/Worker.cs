@@ -63,7 +63,15 @@ namespace Zoo.Workers
 
         public bool IsWorkingAtTime(int time)
         {
-            return this.WorkAreaTime[time] != null;
+            try
+            {
+                return this.WorkAreaTime[time] != null;
+            } 
+            //when no one work at certain time
+            catch(System.Collections.Generic.KeyNotFoundException excetion)
+            {
+                return false;
+            }
         }
 
 
