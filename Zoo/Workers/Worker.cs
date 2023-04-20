@@ -13,6 +13,12 @@ namespace Zoo.Workers
         public Area WorkArea;
         public int WorkTime; //seconds
 
+        protected Worker(string name) : base(name)
+        {
+        }
+
+        //In order to keep OOP, workerer types that delay a tour will not allow tourists,
+        //to continue their tour while working (prevents asking in zoo class which worker type is working)
         public abstract void DoWork();
 
         private bool CanHaveWorkInRange(int newWorkTime)

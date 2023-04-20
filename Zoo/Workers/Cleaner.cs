@@ -9,9 +9,8 @@ namespace Zoo.Workers
 {
     public class Cleaner : Worker
     {
-        public Cleaner(string name, Area WorkArea)
+        public Cleaner(string name, Area WorkArea) : base(name)
         {
-            this.Name = name;
             this.WorkArea = WorkArea;
             this.WorkTime = 2;
         }

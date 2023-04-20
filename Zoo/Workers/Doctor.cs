@@ -11,9 +11,8 @@ namespace Zoo.Workers
     {
         private Animal Animal;
 
-        public Doctor(string name, Animal animal)
+        public Doctor(string name, Animal animal) : base(name)
         {
-            this.Name = name;
             Animal = animal;
             this.WorkArea = Animal.Area;
             this.WorkTime = 5;

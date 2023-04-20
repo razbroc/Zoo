@@ -27,7 +27,6 @@ namespace Zoo
         public List<Worker> Workers;
         public List<Person> Visitors;
 
-        //private int CurrentTime = 0; 
         public const int SECONDS_IN_DAY = 120;
         public delegate void FieldChangedEventHandler();
         public event FieldChangedEventHandler CurrentTimeChanged;
@@ -47,19 +46,17 @@ namespace Zoo
         
         protected virtual void OnCurrentTimeChange()
         {
+            //runs the methods that need to happen as every second passes. (ex: check if worker's time to work).
             CurrentTimeChanged?.Invoke();
         }
 
-        //find the worker that should work at this time and make him work
+        //make the worker that should work at this time work.
         public void WorkWokers()
         {
             foreach (Worker worker in this.Workers)
             {
                 if (worker.IsWorkingAtTime(CurrentTime)) { 
-                    //TODO: we need to add here to pause a tour in the current zone that the worker is working.
-                    //only for doctor and cleaner
                     worker.DoWork();
-                    //resume
                 }
             }
         }
@@ -104,12 +101,12 @@ namespace Zoo
        
        public void StartTour(string location, object objToLock, List<Person> visitors)
        {
+            //locking tour area
            lock (objToLock)
            {
-
-                Console.WriteLine($"Touring in the {location}!...");
+                Console.WriteLine($"Tour has started on {location}!... time: {this.CurrentTime} sec");
                 Thread.Sleep(10000);
-                Console.WriteLine($"{location} tour is finished...");
+                Console.WriteLine($"{location} tour is finished... time: {this.CurrentTime} sec");
             }
        }
 
@@ -149,6 +146,7 @@ namespace Zoo
         
         public void RunDayInZoo()
         {
+            this.CurrentTime = 0;
             InitAllWorkers();
             while (this.CurrentTime != SECONDS_IN_DAY)
             {
@@ -156,7 +154,7 @@ namespace Zoo
                 Thread.Sleep(1000);
                 object tourPlace = this.RandomTourArea();
                 List<Person> currentTour = AssignePeopleToTour();
-                Thread runningTour = new Thread(()=> StartTour((string)tourPlace, tourPlace, currentTour));\
+                Thread runningTour = new Thread(()=> StartTour((string)tourPlace, tourPlace, currentTour));
                 runningTour.Start();
             }
 
